@@ -32,6 +32,10 @@ class Class
         {
             sign = (int)Compute.div;
         }
+        else
+        {
+            sign = -1;
+        }
         return sign;
     }
 
@@ -43,11 +47,11 @@ class Class
         int sign = GetSign(expression);
         switch (sign)
         {
-            case 0:     signIndex = expression.IndexOf('+');    break;
-            case 1:     signIndex = expression.IndexOf('-');    break;
-            case 2:     signIndex = expression.IndexOf('*');    break;
-            case 3:     signIndex = expression.IndexOf('/');    break;
-            default:    signIndex = -1;                         break;
+            case 0: signIndex = expression.IndexOf('+'); break;
+            case 1: signIndex = expression.IndexOf('-'); break;
+            case 2: signIndex = expression.IndexOf('*'); break;
+            case 3: signIndex = expression.IndexOf('/'); break;
+            default: signIndex = -1; break;
         }
 
         num1 = float.Parse(expression.Substring(0, signIndex));
@@ -97,12 +101,18 @@ class Class
     // 一次流程
     static int OnceProcess(string inputValue, ref float result)
     {
+        /*state:
+         *      0:default
+         *      1:exit
+         *      2:error
+         */
+
         Console.Write("（退出输入exit或直接回车）输入算式：");
         inputValue = Console.ReadLine();
 
         // 检查是否退出
         int state = 0;
-        if(inputValue == "exit" || inputValue == "")
+        if (inputValue == "exit" || inputValue == "")
         {
             //inputValue = "a";
             state = 1;
@@ -112,13 +122,18 @@ class Class
         int sign = GetSign(inputValue);
         switch (sign)
         {
-            case 0: Addition        (inputValue, ref result); break;
-            case 1: Subtraction     (inputValue, ref result); break;
-            case 2: Multiplication  (inputValue, ref result); break;
-            case 3: Division        (inputValue, ref result); break;
-            default: ; break;
+            case 0: Addition(inputValue, ref result); break;
+            case 1: Subtraction(inputValue, ref result); break;
+            case 2: Multiplication(inputValue, ref result); break;
+            case 3: Division(inputValue, ref result); break;
+            case -1: state = 2; break;
+            default:; break;
         }
-        Console.WriteLine($"{inputValue}的结果是{result}。");
+
+        if(state != 2)
+        {
+            Console.WriteLine($"{inputValue}的结果是{result}。");
+        }
 
         return state;
     }
@@ -130,11 +145,17 @@ class Class
         float result = 0;
         int state = 0;
 
-        while(true)
+        while (true)
         {
             state = OnceProcess(inputValue, ref result);
-            if(state == 1)
+            if (state == 1)
             {
+                break;
+            }
+            if (state == 2)
+            {
+                Console.WriteLine("发生错误，任意键退出");
+                Console.ReadKey();
                 break;
             }
         }
