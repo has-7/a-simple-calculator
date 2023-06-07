@@ -97,13 +97,14 @@ class Class
     // 一次流程
     static int OnceProcess(string inputValue, ref float result)
     {
-        Console.Write("（退出输入exit）输入算式：");
+        Console.Write("（退出输入exit或直接回车）输入算式：");
         inputValue = Console.ReadLine();
 
         // 检查是否退出
         int state = 0;
-        if(inputValue == "exit")
+        if(inputValue == "exit" || inputValue == "")
         {
+            //inputValue = "a";
             state = 1;
             return state;
         }
